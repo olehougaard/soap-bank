@@ -55,4 +55,15 @@ public final class Money {
 	public String toString() {
 		return String.format("%s %s", amount.toPlainString(), currency);
 	}
+
+	// JAX-WS
+	public Money(){}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 }

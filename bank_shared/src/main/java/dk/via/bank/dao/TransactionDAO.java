@@ -12,8 +12,8 @@ import java.util.List;
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL)
 public interface TransactionDAO {
-	@WebMethod AbstractTransaction read(int transactionId);
-	@WebMethod List<AbstractTransaction> readAllFor(Account account);
-	@WebMethod void create(AbstractTransaction transaction);
-	@WebMethod void deleteFor(Account account);
+	@WebMethod AbstractTransaction readTransaction(int transactionId);
+	@WebMethod List<AbstractTransaction> readTransactionsFor(Account account);
+	@WebMethod void createTransactions(AbstractTransaction transaction);
+	@WebMethod void deleteTransactionsFor(Account account);
 }

@@ -44,7 +44,7 @@ public class TransactionDAOService implements TransactionDAO {
 		}
 
 		private Account readAccount(ResultSet rs, String regNumberAttr, String acctNumberAttr) throws SQLException {
-			return accounts.read(new AccountNumber(rs.getInt(regNumberAttr), rs.getLong(acctNumberAttr)));
+			return accounts.readAccount(new AccountNumber(rs.getInt(regNumberAttr), rs.getLong(acctNumberAttr)));
 		}
 	}
 	
@@ -77,22 +77,22 @@ public class TransactionDAOService implements TransactionDAO {
 	
 	private final TransactionCreator creator = new TransactionCreator();
 	
-	public void create(AbstractTransaction transaction) {
+	public void createTransactions(AbstractTransaction transaction) {
 		transaction.accept(creator);
 	}
 
-	public AbstractTransaction read(int transactionId) {
+	public AbstractTransaction readTransaction(int transactionId) {
 		return helper.mapSingle(new TransactionMapper(), "SELECT * FROM Transaction WHERE transaction_id = ?", transactionId);
 	}
 
-	public List<AbstractTransaction> readAllFor(Account account) {
+	public List<AbstractTransaction> readTransactionsFor(Account account) {
 		AccountNumber accountNumber = account.getAccountNumber();
 		return helper.map(new TransactionMapper(), 
 				"SELECT * FROM Transaction WHERE (primary_reg_number = ? AND primary_account_number = ?) OR (secondary_reg_number = ? AND secondary_account_number = ?)",
 				accountNumber.getRegNumber(), accountNumber.getAccountNumber(),accountNumber.getRegNumber(), accountNumber.getAccountNumber());
 	}
 
-	public void deleteFor(Account account) {
+	public void deleteTransactionsFor(Account account) {
 		AccountNumber accountNumber = account.getAccountNumber();
 		helper.executeUpdate("DELETE FROM Transaction WHERE (primary_reg_number = ? AND primary_account_number = ?) OR (secondary_reg_number = ? AND secondary_account_number = ?)",
 				accountNumber.getRegNumber(), accountNumber.getAccountNumber(),accountNumber.getRegNumber(), accountNumber.getAccountNumber());

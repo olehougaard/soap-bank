@@ -20,10 +20,11 @@ public class AccountDAOService implements AccountDAO {
 		helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
 
-	public Account create(int regNumber, Customer customer, String currency) {
+	@Override
+	public Account createAccount(int regNumber, Customer customer, String currency) {
 		final List<Integer> keys = helper.executeUpdateWithGeneratedKeys("INSERT INTO Account(reg_number, customer, currency) VALUES (?, ?, ?)", 
 				regNumber, customer.getCpr(), currency);
-		return read(new AccountNumber(regNumber, keys.get(0)));
+		return readAccount(new AccountNumber(regNumber, keys.get(0)));
 	}
 	
 	public static class AccountMapper implements DataMapper<Account>{
@@ -37,7 +38,7 @@ public class AccountDAOService implements AccountDAO {
 		
 	}
 
-    public Account read(AccountNumber accountNumber) {
+    public Account readAccount(AccountNumber accountNumber) {
 		return helper.mapSingle(new AccountMapper(), "SELECT * FROM Account WHERE reg_number = ? AND account_number = ? AND active", 
 				accountNumber.getRegNumber(), accountNumber.getAccountNumber());
 	}
@@ -46,12 +47,12 @@ public class AccountDAOService implements AccountDAO {
 		return helper.map(new AccountMapper(), "SELECT * FROM Account WHERE customer = ? AND active", customer.getCpr()) ;
 	}
 
-    public void update(Account account) {
+    public void updateAccount(Account account) {
 		helper.executeUpdate("UPDATE ACCOUNT SET balance = ?, currency = ? WHERE reg_number = ? AND account_number = ? AND active", 
 				account.getBalance().getAmount(), account.getSettledCurrency(), account.getAccountNumber().getRegNumber(), account.getAccountNumber().getAccountNumber());
 	}
 
-    public void delete(Account account) {
+    public void deleteAccount(Account account) {
 		helper.executeUpdate("UPDATE ACCOUNT SET active = FALSE WHERE reg_number = ? AND account_number = ?", 
 				account.getAccountNumber().getRegNumber(), account.getAccountNumber().getAccountNumber());
 	}

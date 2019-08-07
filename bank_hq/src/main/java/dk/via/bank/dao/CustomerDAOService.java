@@ -28,12 +28,12 @@ public class CustomerDAOService implements CustomerDAO {
 		}
 	}
 	
-	public Customer create(String cpr, String name, String address) {
+	public Customer createCustomer(String cpr, String name, String address) {
 		helper.executeUpdate("INSERT INTO Customer VALUES (?, ?, ?)", cpr, name, address);
 		return new Customer(cpr, name, address);
 	}
 
-	public Customer read(String cpr) {
+	public Customer readCustomer(String cpr) {
 		CustomerMapper mapper = new CustomerMapper();
 		Customer customer = helper.mapSingle(mapper, "SELECT * FROM Customer WHERE cpr = ?;", cpr);
 		Collection<Account> accounts = accountDAO.readAccountsFor(customer);
@@ -43,11 +43,11 @@ public class CustomerDAOService implements CustomerDAO {
 		return customer;
 	}
 
-	public void update(Customer customer) {
+	public void updateCustomer(Customer customer) {
 		helper.executeUpdate("UPDATE Customer set name = ?, address = ? WHERE cpr = ?", customer.getName(), customer.getAddress(), customer.getCpr());
 	}
 
-	public void delete(Customer customer) {
+	public void deleteCustomer(Customer customer) {
 		helper.executeUpdate("DELETE FROM Customer WHERE cpr = ?", customer.getCpr());
 	}
 }

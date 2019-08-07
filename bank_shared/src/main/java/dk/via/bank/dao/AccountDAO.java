@@ -12,9 +12,9 @@ import java.util.Collection;
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL)
 public interface AccountDAO {
-	@WebMethod Account create(int regNumber, Customer customer, String currency);
-    @WebMethod Account read(AccountNumber accountNumber);
+	@WebMethod Account createAccount(int regNumber, Customer customer, String currency);
+    @WebMethod Account readAccount(AccountNumber accountNumber);
     @WebMethod Collection<Account> readAccountsFor(Customer customer);
-    @WebMethod void update(Account account);
-    @WebMethod void delete(Account account);
+    @WebMethod void updateAccount(Account account);
+    @WebMethod void deleteAccount(Account account);
 }

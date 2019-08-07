@@ -32,4 +32,15 @@ public class Account {
 	public synchronized void withdraw(Money amount) {
 		this.balance = balance.subtract(amount);
 	}
+
+	//JAX-WS
+	public Account() {}
+
+	public void setAccountNumber(AccountNumber accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public void setBalance(Money balance) {
+		this.balance = balance;
+	}
 }

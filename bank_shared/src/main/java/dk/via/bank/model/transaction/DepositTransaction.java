@@ -17,4 +17,9 @@ public class DepositTransaction extends AbstractTransaction {
 	public void accept(TransactionVisitor visitor) {
 		visitor.visit(this);
 	}
+
+	// JAX-WS
+
+	public DepositTransaction() {
+	}
 }

@@ -26,27 +26,29 @@ public class RemoteBranch implements Branch, TransactionVisitor {
 
 	@Override
 	public Customer createCustomer(String cpr, String name, String address) {
-		return customerDAO.create(cpr, name, address);
+		return customerDAO.createCustomer(cpr, name, address);
 	}
 
 	@Override
 	public Customer getCustomer(String cpr) {
-		return customerDAO.read(cpr);
+		Customer customer = customerDAO.readCustomer(cpr);
+		System.out.println(customer.getName());
+		return customer;
 	}
 
 	@Override
 	public Account createAccount(Customer customer, String currency) {
-		return accountDAO.create(regNumber, customer, currency);
+		return accountDAO.createAccount(regNumber, customer, currency);
 	}
 
 	@Override
 	public Account getAccount(AccountNumber accountNumber) {
-		return accountDAO.read(accountNumber);
+		return accountDAO.readAccount(accountNumber);
 	}
 	
 	@Override
 	public void cancelAccount(Account account) {
-		accountDAO.delete(account);
+		accountDAO.deleteAccount(account);
 	}
 
 	@Override
@@ -57,7 +59,7 @@ public class RemoteBranch implements Branch, TransactionVisitor {
 	@Override
 	public void execute(AbstractTransaction t) {
 		t.accept(this);
-		transactionDAO.create(t);
+		transactionDAO.createTransactions(t);
 	}
 	
 	private Money translateToSettledCurrency(Money amount, Account account) {
@@ -74,7 +76,7 @@ public class RemoteBranch implements Branch, TransactionVisitor {
 		Money amount = transaction.getAmount();
 		amount = translateToSettledCurrency(amount, account);
 		account.deposit(amount);
-		accountDAO.update(account);
+		accountDAO.updateAccount(account);
 	}
 	
 	@Override
@@ -83,7 +85,7 @@ public class RemoteBranch implements Branch, TransactionVisitor {
 		Money amount = transaction.getAmount();
 		amount = translateToSettledCurrency(amount, account);
 		account.withdraw(amount);
-		accountDAO.update(account);
+		accountDAO.updateAccount(account);
 	}
 	
 	@Override
@@ -102,6 +104,6 @@ public class RemoteBranch implements Branch, TransactionVisitor {
 	
 	@Override
 	public List<AbstractTransaction> getTransactionsFor(Account primaryAccount) {
-		return transactionDAO.readAllFor(primaryAccount);
+		return transactionDAO.readTransactionsFor(primaryAccount);
 	}
 }

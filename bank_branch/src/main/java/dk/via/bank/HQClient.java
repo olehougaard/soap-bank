@@ -16,6 +16,8 @@ public class HQClient implements HeadQuarters {
 
     public HQClient(String baseURL) {
         this.baseURL = baseURL;
+        customerDAO = createServiceClient("customer", "CustomerDAOServiceService", CustomerDAO.class);
+        accountDAO = createServiceClient("account", "AccountDAOServiceService", AccountDAO.class);
     }
 
     public HQClient() {

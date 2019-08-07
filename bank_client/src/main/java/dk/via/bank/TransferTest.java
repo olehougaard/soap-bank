@@ -1,24 +1,24 @@
 package dk.via.bank;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.math.BigDecimal;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.List;
-
+import dk.via.bank.dao.CustomerDAO;
+import dk.via.bank.model.Account;
+import dk.via.bank.model.Customer;
+import dk.via.bank.model.Money;
+import dk.via.bank.model.transaction.AbstractTransaction;
+import dk.via.bank.model.transaction.DepositTransaction;
+import dk.via.bank.model.transaction.TransferTransaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import dk.via.bank.model.Account;
-import dk.via.bank.model.Customer;
-import dk.via.bank.model.Money;
-import dk.via.bank.model.transaction.DepositTransaction;
-import dk.via.bank.model.transaction.Transaction;
-import dk.via.bank.model.transaction.TransferTransaction;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TransferTest {
 	private Branch branch;
@@ -27,8 +27,10 @@ public class TransferTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Registry registry = LocateRegistry.getRegistry("localhost", 8099);
-		branch = (Branch) registry.lookup("Branch 1");
+		URL wsdl = new URL("http://localhost:8090/branch?wsdl");
+		QName name = new QName("http://bank.via.dk/", "RemoteBranchService");
+		Service service = Service.create(wsdl, name);
+		branch = service.getPort(Branch.class);
 		Customer customer = branch.getCustomer("1234567890");
 		primaryAccount = branch.createAccount(customer, "DKK");
 		assertNotNull(primaryAccount);
@@ -37,18 +39,18 @@ public class TransferTest {
 	}
 	
 	@After
-	public void tearDown() throws Exception {
-		branch.cancelAccount(primaryAccount);
-		branch.cancelAccount(secondaryAccount);
+	public void tearDown() {
+		if (primaryAccount != null) branch.cancelAccount(primaryAccount);
+		if (secondaryAccount != null) branch.cancelAccount(secondaryAccount);
 	}
 	
 	@Test
-	public void test() throws RemoteException {
+	public void test() {
 		Money startingAmount = new Money(new BigDecimal(10000), "DKK");
 		Money transferAmount = new Money(new BigDecimal(1000), "DKK");
 		Money remainingAmount = new Money(new BigDecimal(9000), "DKK");
-		List<Transaction> primaryTransactionsBefore = branch.getTransactionsFor(primaryAccount);
-		List<Transaction> secondaryTransactionsBefore = branch.getTransactionsFor(secondaryAccount);
+		List<AbstractTransaction> primaryTransactionsBefore = branch.getTransactionsFor(primaryAccount);
+		List<AbstractTransaction> secondaryTransactionsBefore = branch.getTransactionsFor(secondaryAccount);
 		branch.execute(new DepositTransaction(startingAmount, primaryAccount));
 		primaryAccount = branch.getAccount(primaryAccount.getAccountNumber());
 		assertEquals(startingAmount, primaryAccount.getBalance());

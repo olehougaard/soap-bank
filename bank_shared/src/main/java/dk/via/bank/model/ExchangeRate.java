@@ -68,4 +68,21 @@ public class ExchangeRate {
 			return false;
 		return true;
 	}
+
+	//JAX-WS
+
+	public ExchangeRate() {
+	}
+
+	public void setFromCurrency(String fromCurrency) {
+		this.fromCurrency = fromCurrency;
+	}
+
+	public void setToCurrency(String toCurrency) {
+		this.toCurrency = toCurrency;
+	}
+
+	public void setExchangeRate(BigDecimal exchangeRate) {
+		this.exchangeRate = exchangeRate;
+	}
 }

@@ -9,8 +9,8 @@ import javax.jws.soap.SOAPBinding;
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL)
 public interface CustomerDAO {
-	@WebMethod Customer create(String cpr, String name, String address);
-	@WebMethod Customer read(String cpr);
-	@WebMethod void update(Customer customer);
-	@WebMethod void delete(Customer customer);
+	@WebMethod Customer createCustomer(String cpr, String name, String address);
+	@WebMethod Customer readCustomer(String cpr);
+	@WebMethod void updateCustomer(Customer customer);
+	@WebMethod void deleteCustomer(Customer customer);
 }

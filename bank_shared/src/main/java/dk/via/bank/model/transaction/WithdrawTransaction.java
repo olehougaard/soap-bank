@@ -17,4 +17,9 @@ public class WithdrawTransaction extends AbstractTransaction {
 	public void accept(TransactionVisitor visitor) {
 		visitor.visit(this);
 	}
+
+	// JAX-WS
+
+	public WithdrawTransaction() {
+	}
 }

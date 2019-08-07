@@ -48,4 +48,17 @@ public class TransferTransaction extends AbstractTransaction {
 	public String getText() {
 		return withdrawTransaction.getText();
 	}
+
+	// JAX-WS
+
+	public TransferTransaction() {
+	}
+
+	public void setWithdrawTransaction(WithdrawTransaction withdrawTransaction) {
+		this.withdrawTransaction = withdrawTransaction;
+	}
+
+	public void setDepositTransaction(DepositTransaction depositTransaction) {
+		this.depositTransaction = depositTransaction;
+	}
 }

@@ -1,7 +1,7 @@
 package dk.via.bank.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 
 public class Customer {
 	private String cpr;
@@ -36,7 +36,26 @@ public class Customer {
 		accounts.add(account);
 	}
 
-	public Collection<Account> getAccounts() {
-		return new ArrayList<Account>(accounts);
+	public Account[] getAccounts() {
+		return accounts.toArray(new Account[0]);
+	}
+
+	//JAX-WS
+	public Customer() {this.accounts = new ArrayList<>();}
+
+	public void setCpr(String cpr) {
+		this.cpr = cpr;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setAccounts(Account[] accounts) {
+		this.accounts = new ArrayList<>(Arrays.asList(accounts));
 	}
 }

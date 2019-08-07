@@ -34,4 +34,15 @@ public final class AccountNumber {
 	public String toString() {
 		return String.format("%s %010d", regNumber, accountNumber);
 	}
+
+	// JAX-WS
+	public AccountNumber() {}
+
+	public void setRegNumber(int regNumber) {
+		this.regNumber = regNumber;
+	}
+
+	public void setAccountNumber(long accountNumber) {
+		this.accountNumber = accountNumber;
+	}
 }

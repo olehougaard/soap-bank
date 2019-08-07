@@ -7,9 +7,12 @@ import java.rmi.registry.Registry;
 
 import dk.via.bank.dao.HeadQuarters;
 
+import javax.xml.ws.Endpoint;
+
 public class RunBranch {
 	public static void main(String[] args) throws RemoteException, NotBoundException {
-		Registry registry = LocateRegistry.getRegistry(1099);
-		HeadQuarters hq = (HeadQuarters) registry.lookup("HQ");
+		HeadQuarters hq = new HQClient();
+		RemoteBranch branch = new RemoteBranch(1234, hq);
+		Endpoint.publish("http://localhost:8090/branch", branch);
 	}
 }

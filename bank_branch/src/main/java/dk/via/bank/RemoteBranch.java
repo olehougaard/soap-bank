@@ -4,9 +4,11 @@ import dk.via.bank.dao.*;
 import dk.via.bank.model.*;
 import dk.via.bank.model.transaction.*;
 
+import javax.jws.WebService;
 import java.util.Collection;
 import java.util.List;
 
+@WebService(endpointInterface = "dk.via.bank.Branch")
 public class RemoteBranch implements Branch, TransactionVisitor {
 	private int regNumber;
 	private AccountDAO accountDAO;

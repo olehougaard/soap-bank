@@ -2,13 +2,10 @@ package dk.via.bank.dao;
 
 import dk.via.bank.model.ExchangeRate;
 
-import javax.jws.WebMethod;
 import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
 import java.math.BigDecimal;
 
-@WebService
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL)
+@WebService(endpointInterface = "dk.via.bank.dao.ExchangeRateDAO")
 public class ExchangeRateDAOService implements ExchangeRateDAO {
 	private String jdbcURL;
 	private String username;
@@ -20,7 +17,6 @@ public class ExchangeRateDAOService implements ExchangeRateDAO {
 		this.password = password;
 	}
 
-	@WebMethod
 	public ExchangeRate getExchangeRate(String fromCurrency, String toCurrency) {
 		DatabaseHelper<BigDecimal> helper = new DatabaseHelper<>(jdbcURL, username, password);
 		BigDecimal rate = helper.mapSingle((rs)->rs.getBigDecimal(1), "SELECT rate FROM Exchange_rates WHERE from_currency = ? AND to_currency = ?", fromCurrency, toCurrency);

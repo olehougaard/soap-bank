@@ -1,19 +1,16 @@
 package dk.via.bank.dao;
 
-import dk.via.bank.model.transaction.*;
 import dk.via.bank.model.Account;
 import dk.via.bank.model.AccountNumber;
 import dk.via.bank.model.Money;
+import dk.via.bank.model.transaction.*;
 
-import javax.jws.WebMethod;
 import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebService
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL)
+@WebService(endpointInterface = "dk.via.bank.dao.TransactionDAO")
 public class TransactionDAOService implements TransactionDAO {
 	private static final String DEPOSIT = "Deposit";
 	private static final String TRANSFER = "Transfer";
@@ -80,17 +77,14 @@ public class TransactionDAOService implements TransactionDAO {
 	
 	private final TransactionCreator creator = new TransactionCreator();
 	
-	@WebMethod
 	public void create(AbstractTransaction transaction) {
 		transaction.accept(creator);
 	}
 
-	@WebMethod
 	public AbstractTransaction read(int transactionId) {
 		return helper.mapSingle(new TransactionMapper(), "SELECT * FROM Transaction WHERE transaction_id = ?", transactionId);
 	}
 
-	@WebMethod
 	public List<AbstractTransaction> readAllFor(Account account) {
 		AccountNumber accountNumber = account.getAccountNumber();
 		return helper.map(new TransactionMapper(), 
@@ -98,7 +92,6 @@ public class TransactionDAOService implements TransactionDAO {
 				accountNumber.getRegNumber(), accountNumber.getAccountNumber(),accountNumber.getRegNumber(), accountNumber.getAccountNumber());
 	}
 
-	@WebMethod
 	public void deleteFor(Account account) {
 		AccountNumber accountNumber = account.getAccountNumber();
 		helper.executeUpdate("DELETE FROM Transaction WHERE (primary_reg_number = ? AND primary_account_number = ?) OR (secondary_reg_number = ? AND secondary_account_number = ?)",

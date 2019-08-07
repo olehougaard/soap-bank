@@ -1,23 +1,18 @@
 package dk.via.bank.dao;
 
+import dk.via.bank.model.Account;
+import dk.via.bank.model.AccountNumber;
+import dk.via.bank.model.Customer;
+import dk.via.bank.model.Money;
+
+import javax.jws.WebService;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-import dk.via.bank.model.Account;
-import dk.via.bank.model.AccountNumber;
-import dk.via.bank.model.Customer;
-import dk.via.bank.model.Money;
-
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPBinding.*;
-
-@WebService
-@SOAPBinding(style = Style.DOCUMENT, use = Use.LITERAL)
+@WebService(endpointInterface = "dk.via.bank.dao.AccountDAO")
 public class AccountDAOService implements AccountDAO {
 	private DatabaseHelper<Account> helper;
 	
@@ -25,7 +20,6 @@ public class AccountDAOService implements AccountDAO {
 		helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
 
-	@WebMethod
 	public Account create(int regNumber, Customer customer, String currency) {
 		final List<Integer> keys = helper.executeUpdateWithGeneratedKeys("INSERT INTO Account(reg_number, customer, currency) VALUES (?, ?, ?)", 
 				regNumber, customer.getCpr(), currency);
@@ -43,24 +37,20 @@ public class AccountDAOService implements AccountDAO {
 		
 	}
 
-    @WebMethod
     public Account read(AccountNumber accountNumber) {
 		return helper.mapSingle(new AccountMapper(), "SELECT * FROM Account WHERE reg_number = ? AND account_number = ? AND active", 
 				accountNumber.getRegNumber(), accountNumber.getAccountNumber());
 	}
 
-    @WebMethod
     public Collection<Account> readAccountsFor(Customer customer) {
 		return helper.map(new AccountMapper(), "SELECT * FROM Account WHERE customer = ? AND active", customer.getCpr()) ;
 	}
 
-    @WebMethod
     public void update(Account account) {
 		helper.executeUpdate("UPDATE ACCOUNT SET balance = ?, currency = ? WHERE reg_number = ? AND account_number = ? AND active", 
 				account.getBalance().getAmount(), account.getSettledCurrency(), account.getAccountNumber().getRegNumber(), account.getAccountNumber().getAccountNumber());
 	}
 
-    @WebMethod
     public void delete(Account account) {
 		helper.executeUpdate("UPDATE ACCOUNT SET active = FALSE WHERE reg_number = ? AND account_number = ?", 
 				account.getAccountNumber().getRegNumber(), account.getAccountNumber().getAccountNumber());

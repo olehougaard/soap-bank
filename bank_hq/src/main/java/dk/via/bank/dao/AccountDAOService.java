@@ -11,6 +11,13 @@ import dk.via.bank.model.AccountNumber;
 import dk.via.bank.model.Customer;
 import dk.via.bank.model.Money;
 
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.*;
+
+@WebService
+@SOAPBinding(style = Style.DOCUMENT, use = Use.LITERAL)
 public class AccountDAOService implements AccountDAO {
 	private DatabaseHelper<Account> helper;
 	
@@ -18,7 +25,7 @@ public class AccountDAOService implements AccountDAO {
 		helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
 
-	@Override
+	@WebMethod
 	public Account create(int regNumber, Customer customer, String currency) {
 		final List<Integer> keys = helper.executeUpdateWithGeneratedKeys("INSERT INTO Account(reg_number, customer, currency) VALUES (?, ?, ?)", 
 				regNumber, customer.getCpr(), currency);
@@ -36,25 +43,25 @@ public class AccountDAOService implements AccountDAO {
 		
 	}
 
-	@Override
-	public Account read(AccountNumber accountNumber) {
+    @WebMethod
+    public Account read(AccountNumber accountNumber) {
 		return helper.mapSingle(new AccountMapper(), "SELECT * FROM Account WHERE reg_number = ? AND account_number = ? AND active", 
 				accountNumber.getRegNumber(), accountNumber.getAccountNumber());
 	}
 
-	@Override
-	public Collection<Account> readAccountsFor(Customer customer) {
+    @WebMethod
+    public Collection<Account> readAccountsFor(Customer customer) {
 		return helper.map(new AccountMapper(), "SELECT * FROM Account WHERE customer = ? AND active", customer.getCpr()) ;
 	}
 
-	@Override
-	public void update(Account account) {
+    @WebMethod
+    public void update(Account account) {
 		helper.executeUpdate("UPDATE ACCOUNT SET balance = ?, currency = ? WHERE reg_number = ? AND account_number = ? AND active", 
 				account.getBalance().getAmount(), account.getSettledCurrency(), account.getAccountNumber().getRegNumber(), account.getAccountNumber().getAccountNumber());
 	}
 
-	@Override
-	public void delete(Account account) {
+    @WebMethod
+    public void delete(Account account) {
 		helper.executeUpdate("UPDATE ACCOUNT SET active = FALSE WHERE reg_number = ? AND account_number = ?", 
 				account.getAccountNumber().getRegNumber(), account.getAccountNumber().getAccountNumber());
 	}

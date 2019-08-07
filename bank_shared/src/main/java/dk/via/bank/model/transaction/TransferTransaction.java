@@ -3,17 +3,18 @@ package dk.via.bank.model.transaction;
 import dk.via.bank.model.Account;
 import dk.via.bank.model.Money;
 
-public class TransferTransaction implements Transaction {
-	private static final long serialVersionUID = 1L;
+public class TransferTransaction extends AbstractTransaction {
 	private WithdrawTransaction withdrawTransaction;
 	private DepositTransaction depositTransaction;
 	
 	public TransferTransaction(Money amount, Account account, Account recipient) {
+		super(amount, account, "Transferred " + amount + " to " + recipient);
 		this.withdrawTransaction = new WithdrawTransaction(amount, account, "Transferred " + amount + " to " + recipient);
 		this.depositTransaction = new DepositTransaction(amount, recipient, "Transferred" + amount + "from " + recipient);
 	}
 	
 	public TransferTransaction(Money amount, Account account, Account recipient, String text) {
+		super(amount, account, text);
 		this.withdrawTransaction = new WithdrawTransaction(amount, account, text);
 		this.depositTransaction = new DepositTransaction(amount, recipient, text);
 	}

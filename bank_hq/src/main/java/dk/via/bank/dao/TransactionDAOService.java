@@ -5,16 +5,21 @@ import dk.via.bank.model.Account;
 import dk.via.bank.model.AccountNumber;
 import dk.via.bank.model.Money;
 
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL)
 public class TransactionDAOService implements TransactionDAO {
 	private static final String DEPOSIT = "Deposit";
 	private static final String TRANSFER = "Transfer";
 	private static final String WITHDRAWAL = "Withdrawal";
 
-	private DatabaseHelper<Transaction> helper;
+	private DatabaseHelper<AbstractTransaction> helper;
 	private AccountDAO accounts;
 	
 	public TransactionDAOService(AccountDAO accounts, String jdbcURL, String username, String password) {
@@ -22,9 +27,9 @@ public class TransactionDAOService implements TransactionDAO {
 		this.helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
 	
-	private class TransactionMapper implements DataMapper<Transaction> {
+	private class TransactionMapper implements DataMapper<AbstractTransaction> {
 		@Override
-		public Transaction create(ResultSet rs) throws SQLException {
+		public AbstractTransaction create(ResultSet rs) throws SQLException {
 			Money amount = new Money(rs.getBigDecimal("amount"), rs.getString("currency"));
 			String text = rs.getString("transaction_text");
 			Account primary = readAccount(rs, "primary_reg_number", "primary_account_number");
@@ -75,25 +80,25 @@ public class TransactionDAOService implements TransactionDAO {
 	
 	private final TransactionCreator creator = new TransactionCreator();
 	
-	@Override
-	public void create(Transaction transaction) {
+	@WebMethod
+	public void create(AbstractTransaction transaction) {
 		transaction.accept(creator);
 	}
 
-	@Override
-	public Transaction read(int transactionId) {
+	@WebMethod
+	public AbstractTransaction read(int transactionId) {
 		return helper.mapSingle(new TransactionMapper(), "SELECT * FROM Transaction WHERE transaction_id = ?", transactionId);
 	}
 
-	@Override
-	public List<Transaction> readAllFor(Account account) {
+	@WebMethod
+	public List<AbstractTransaction> readAllFor(Account account) {
 		AccountNumber accountNumber = account.getAccountNumber();
 		return helper.map(new TransactionMapper(), 
 				"SELECT * FROM Transaction WHERE (primary_reg_number = ? AND primary_account_number = ?) OR (secondary_reg_number = ? AND secondary_account_number = ?)",
 				accountNumber.getRegNumber(), accountNumber.getAccountNumber(),accountNumber.getRegNumber(), accountNumber.getAccountNumber());
 	}
 
-	@Override
+	@WebMethod
 	public void deleteFor(Account account) {
 		AccountNumber accountNumber = account.getAccountNumber();
 		helper.executeUpdate("DELETE FROM Transaction WHERE (primary_reg_number = ? AND primary_account_number = ?) OR (secondary_reg_number = ? AND secondary_account_number = ?)",

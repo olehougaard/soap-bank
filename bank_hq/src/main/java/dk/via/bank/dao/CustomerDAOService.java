@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-@WebService(endpointInterface = "dk.via.bank.dao.CustomerDAO")
+@WebService(endpointInterface = "dk.via.bank.dao.CustomerDAO", serviceName="CustomerService")
 public class CustomerDAOService implements CustomerDAO {
 	private DatabaseHelper<Customer> helper;
 	private AccountDAO accountDAO;

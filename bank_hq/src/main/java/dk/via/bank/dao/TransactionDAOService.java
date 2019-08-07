@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebService(endpointInterface = "dk.via.bank.dao.TransactionDAO")
+@WebService(endpointInterface = "dk.via.bank.dao.TransactionDAO", serviceName="TransactionService")
 public class TransactionDAOService implements TransactionDAO {
 	private static final String DEPOSIT = "Deposit";
 	private static final String TRANSFER = "Transfer";

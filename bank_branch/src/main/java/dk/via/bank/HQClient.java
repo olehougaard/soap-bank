@@ -16,8 +16,6 @@ public class HQClient implements HeadQuarters {
 
     public HQClient(String baseURL) {
         this.baseURL = baseURL;
-        customerDAO = createServiceClient("customer", "CustomerDAOServiceService", CustomerDAO.class);
-        accountDAO = createServiceClient("account", "AccountDAOServiceService", AccountDAO.class);
     }
 
     public HQClient() {
@@ -39,7 +37,7 @@ public class HQClient implements HeadQuarters {
     @Override
     public synchronized ExchangeRateDAO getExchangeDAO() {
         if (exchangeRateDAO == null) {
-            exchangeRateDAO = createServiceClient("exchange-rate", "ExchangeRateDAOServiceService", ExchangeRateDAO.class);
+            exchangeRateDAO = createServiceClient("exchange-rate", "ExchangeRateService", ExchangeRateDAO.class);
         }
         return exchangeRateDAO;
     }
@@ -47,7 +45,7 @@ public class HQClient implements HeadQuarters {
     @Override
     public synchronized AccountDAO getAccountDAO() {
         if (accountDAO == null) {
-            accountDAO = createServiceClient("account", "AccountDAOServiceService", AccountDAO.class);
+            accountDAO = createServiceClient("account", "AccountService", AccountDAO.class);
         }
         return accountDAO;
     }
@@ -55,7 +53,7 @@ public class HQClient implements HeadQuarters {
     @Override
     public synchronized CustomerDAO getCustomerDAO() {
         if (customerDAO == null) {
-            customerDAO = createServiceClient("customer", "CustomerDAOServiceService", CustomerDAO.class);
+            customerDAO = createServiceClient("customer", "CustomerService", CustomerDAO.class);
         }
         return customerDAO;
     }
@@ -63,7 +61,7 @@ public class HQClient implements HeadQuarters {
     @Override
     public synchronized TransactionDAO getTransactionDAO() {
         if (transactionDAO == null) {
-            transactionDAO = createServiceClient("transaction", "TransactionDAOServiceService", TransactionDAO.class);
+            transactionDAO = createServiceClient("transaction", "TransactionService", TransactionDAO.class);
         }
         return transactionDAO;
     }

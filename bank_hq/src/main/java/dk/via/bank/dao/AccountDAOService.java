@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-@WebService(endpointInterface = "dk.via.bank.dao.AccountDAO")
+@WebService(endpointInterface = "dk.via.bank.dao.AccountDAO", serviceName="AccountService")
 public class AccountDAOService implements AccountDAO {
 	private DatabaseHelper<Account> helper;
 	

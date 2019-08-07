@@ -31,9 +31,7 @@ public class RemoteBranch implements Branch, TransactionVisitor {
 
 	@Override
 	public Customer getCustomer(String cpr) {
-		Customer customer = customerDAO.readCustomer(cpr);
-		System.out.println(customer.getName());
-		return customer;
+		return customerDAO.readCustomer(cpr);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import dk.via.bank.model.ExchangeRate;
 import javax.jws.WebService;
 import java.math.BigDecimal;
 
-@WebService(endpointInterface = "dk.via.bank.dao.ExchangeRateDAO")
+@WebService(endpointInterface = "dk.via.bank.dao.ExchangeRateDAO", serviceName="ExchangeRateService")
 public class ExchangeRateDAOService implements ExchangeRateDAO {
 	private String jdbcURL;
 	private String username;

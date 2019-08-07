@@ -1,10 +1,8 @@
 package dk.via.bank.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-public final class Money implements Serializable {
-	private static final long serialVersionUID = 1;
+public final class Money {
 	private BigDecimal amount;
 	private String currency;
 

@@ -1,9 +1,6 @@
 package dk.via.bank.model.transaction;
 
-import java.io.Serializable;
-import java.rmi.RemoteException;
-
-public interface Transaction extends Serializable {
+public interface Transaction {
 	String getText();
-	void accept(TransactionVisitor visitor) throws RemoteException;
+	void accept(TransactionVisitor visitor);
 }

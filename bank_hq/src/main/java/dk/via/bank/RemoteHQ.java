@@ -1,8 +1,5 @@
 package dk.via.bank;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-
 import dk.via.bank.dao.AccountDAO;
 import dk.via.bank.dao.AccountDAOService;
 import dk.via.bank.dao.CustomerDAO;
@@ -13,7 +10,7 @@ import dk.via.bank.dao.HeadQuarters;
 import dk.via.bank.dao.TransactionDAO;
 import dk.via.bank.dao.TransactionDAOService;
 
-public class RemoteHQ extends UnicastRemoteObject implements HeadQuarters {
+public class RemoteHQ implements HeadQuarters {
 	private static final long serialVersionUID = 1L;
 	private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/postgres?currentSchema=bank";
 	private static final String USERNAME = "postgres";
@@ -24,7 +21,7 @@ public class RemoteHQ extends UnicastRemoteObject implements HeadQuarters {
 	private CustomerDAOService customerDAO;
 	private TransactionDAO transactionDAOService;
 
-	public RemoteHQ() throws RemoteException {
+	public RemoteHQ() {
 		exchangeDao = new ExchangeRateDAOService(JDBC_URL, USERNAME, PASSWORD);
 		accountDAO = new AccountDAOService(JDBC_URL, USERNAME, PASSWORD);
 		transactionDAOService = new TransactionDAOService(accountDAO, JDBC_URL, USERNAME, PASSWORD);
@@ -32,22 +29,22 @@ public class RemoteHQ extends UnicastRemoteObject implements HeadQuarters {
 	}
 
 	@Override
-	public ExchangeRateDAO getExchangeDAO() throws RemoteException {
+	public ExchangeRateDAO getExchangeDAO() {
 		return exchangeDao;
 	}
 
 	@Override
-	public AccountDAO getAccountDAO() throws RemoteException {
+	public AccountDAO getAccountDAO() {
 		return accountDAO;
 	}
 
 	@Override
-	public CustomerDAO getCustomerDAO() throws RemoteException {
+	public CustomerDAO getCustomerDAO() {
 		return customerDAO;
 	}
 
 	@Override
-	public TransactionDAO getTransactionDAO() throws RemoteException {
+	public TransactionDAO getTransactionDAO() {
 		return transactionDAOService;
 	}
 }

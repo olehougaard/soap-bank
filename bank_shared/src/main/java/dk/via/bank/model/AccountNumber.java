@@ -1,10 +1,6 @@
 package dk.via.bank.model;
 
-import java.io.Serializable;
-
-public final class AccountNumber implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public final class AccountNumber {
 	private int regNumber;
 	private long accountNumber;
 

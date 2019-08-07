@@ -4,7 +4,6 @@ import dk.via.bank.model.Account;
 import dk.via.bank.model.Money;
 
 public abstract class AbstractTransaction implements Transaction {
-	private static final long serialVersionUID = 1L;
 	private Money amount;
 	private Account account;
 	private String text;

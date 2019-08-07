@@ -1,7 +1,5 @@
 package dk.via.bank.model.transaction;
 
-import java.rmi.RemoteException;
-
 import dk.via.bank.model.Account;
 import dk.via.bank.model.Money;
 
@@ -41,7 +39,7 @@ public class TransferTransaction implements Transaction {
 	}
 
 	@Override
-	public void accept(TransactionVisitor visitor) throws RemoteException {
+	public void accept(TransactionVisitor visitor) {
 		visitor.visit(this);
 	}
 

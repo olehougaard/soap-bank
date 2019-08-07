@@ -1,10 +1,6 @@
 package dk.via.bank.dao;
 
-import java.io.Serializable;
-
-public class BranchDTO implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public class BranchDTO {
 	private int regNumber;
 	private String address;
 

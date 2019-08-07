@@ -1,7 +1,5 @@
 package dk.via.bank.dao;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -9,12 +7,11 @@ import java.util.Collection;
 import dk.via.bank.model.Account;
 import dk.via.bank.model.Customer;
 
-public class CustomerDAOService extends UnicastRemoteObject implements CustomerDAO {
-	private static final long serialVersionUID = 1L;
+public class CustomerDAOService implements CustomerDAO {
 	private DatabaseHelper<Customer> helper;
 	private AccountDAO accountDAO;
 	
-	public CustomerDAOService(String jdbcURL, String username, String password, AccountDAO accountDAO) throws RemoteException {
+	public CustomerDAOService(String jdbcURL, String username, String password, AccountDAO accountDAO) {
 		this.accountDAO = accountDAO;
 		this.helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
@@ -30,29 +27,29 @@ public class CustomerDAOService extends UnicastRemoteObject implements CustomerD
 	}
 	
 	@Override
-	public Customer create(String cpr, String name, String address) throws RemoteException {
+	public Customer create(String cpr, String name, String address) {
 		helper.executeUpdate("INSERT INTO Customer VALUES (?, ?, ?)", cpr, name, address);
 		return new Customer(cpr, name, address);
 	}
 
 	@Override
-	public Customer read(String cpr) throws RemoteException {
+	public Customer read(String cpr) {
 		CustomerMapper mapper = new CustomerMapper();
-		Customer cust = helper.mapSingle(mapper, "SELECT * FROM Customer WHERE cpr = ?;", cpr);
-		Collection<Account> accounts = accountDAO.readAccountsFor(cust);
+		Customer customer = helper.mapSingle(mapper, "SELECT * FROM Customer WHERE cpr = ?;", cpr);
+		Collection<Account> accounts = accountDAO.readAccountsFor(customer);
 		for(Account account: accounts) {
-			cust.addAccount(account);
+			customer.addAccount(account);
 		}
-		return cust;
+		return customer;
 	}
 
 	@Override
-	public void update(Customer customer) throws RemoteException {
+	public void update(Customer customer) {
 		helper.executeUpdate("UPDATE Customer set name = ?, address = ? WHERE cpr = ?", customer.getName(), customer.getAddress(), customer.getCpr());
 	}
 
 	@Override
-	public void delete(Customer customer) throws RemoteException {
+	public void delete(Customer customer) {
 		helper.executeUpdate("DELETE FROM Customer WHERE cpr = ?", customer.getCpr());
 	}
 }

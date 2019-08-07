@@ -1,11 +1,8 @@
 package dk.via.bank.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ExchangeRate implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class ExchangeRate {
 	private String fromCurrency;
 	private String toCurrency;
 	private BigDecimal exchangeRate;

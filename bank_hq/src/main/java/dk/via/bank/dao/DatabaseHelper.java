@@ -1,6 +1,5 @@
 package dk.via.bank.dao;
 
-import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,21 +15,17 @@ public class DatabaseHelper<T> {
 	private String username;
 	private String password;
 	
-	public DatabaseHelper(String jdbcURL, String username, String password) throws RemoteException {
+	public DatabaseHelper(String jdbcURL, String username, String password) {
 		this.jdbcURL = jdbcURL;
 		this.username = username;
 		this.password = password;
 		try {
 			DriverManager.registerDriver(new Driver());
 		} catch (SQLException e) {
-			throw new RemoteException("No JDBC driver", e);
+			throw new RuntimeException("No JDBC driver", e);
 		}
 	}
-	
-	public DatabaseHelper(String jdbcURL) throws RemoteException {
-		this(jdbcURL, null, null);
-	}
-	
+
 	public Connection getConnection() throws SQLException {
 		if (username == null) {
 			return DriverManager.getConnection(jdbcURL);
@@ -60,16 +55,16 @@ public class DatabaseHelper<T> {
 		return stat.executeQuery();
 	}
 	
-	public int executeUpdate(String sql, Object... parameters) throws RemoteException {
+	public int executeUpdate(String sql, Object... parameters) {
 		try (Connection connection = getConnection()) {
 			PreparedStatement stat = prepare(connection, sql, parameters);
 			return stat.executeUpdate();
 		} catch (SQLException e) {
-			throw new RemoteException(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 	
-	public List<Integer> executeUpdateWithGeneratedKeys(String sql, Object... parameters) throws RemoteException {
+	public List<Integer> executeUpdateWithGeneratedKeys(String sql, Object... parameters) {
 		try (Connection connection = getConnection()) {
 			PreparedStatement stat = prepareWithKeys(connection, sql, parameters);
 			stat.executeUpdate();
@@ -80,11 +75,11 @@ public class DatabaseHelper<T> {
 			}
 			return keys;
 		} catch (SQLException e) {
-			throw new RemoteException(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 	
-	public T mapSingle(DataMapper<T> mapper, String sql, Object... parameters) throws RemoteException {
+	public T mapSingle(DataMapper<T> mapper, String sql, Object... parameters) {
 		try (Connection connection = getConnection()) {
 			ResultSet rs = executeQuery(connection, sql, parameters);
 			if(rs.next()) {
@@ -93,11 +88,11 @@ public class DatabaseHelper<T> {
 				return null;
 			}
 		} catch (SQLException e) {
-			throw new RemoteException(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
-	public List<T> map(DataMapper<T> mapper, String sql, Object... parameters) throws RemoteException {
+	public List<T> map(DataMapper<T> mapper, String sql, Object... parameters) {
 		try (Connection connection = getConnection()) {
 			ResultSet rs = executeQuery(connection, sql, parameters);
 			LinkedList<T> allCars = new LinkedList<>();
@@ -106,7 +101,7 @@ public class DatabaseHelper<T> {
 			}
 			return allCars;
 		} catch (SQLException e) {
-			throw new RemoteException(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 }

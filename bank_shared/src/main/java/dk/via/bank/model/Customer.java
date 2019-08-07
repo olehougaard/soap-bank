@@ -1,11 +1,9 @@
 package dk.via.bank.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Customer implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class Customer {
 	private String cpr;
 	private String name;
 	private String address;

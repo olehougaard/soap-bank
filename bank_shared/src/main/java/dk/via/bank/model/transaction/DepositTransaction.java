@@ -1,12 +1,9 @@
 package dk.via.bank.model.transaction;
 
-import java.rmi.RemoteException;
-
 import dk.via.bank.model.Account;
 import dk.via.bank.model.Money;
 
 public class DepositTransaction extends AbstractTransaction {
-	private static final long serialVersionUID = 1L;
 
 	public DepositTransaction(Money amount, Account account) {
 		this(amount, account, "Deposited " + amount);
@@ -17,7 +14,7 @@ public class DepositTransaction extends AbstractTransaction {
 	}
 
 	@Override
-	public void accept(TransactionVisitor visitor) throws RemoteException {
+	public void accept(TransactionVisitor visitor) {
 		visitor.visit(this);
 	}
 }
